@@ -41,6 +41,8 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
     
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     #pragma unused(conn)
+    
+    return;
 }
 
 
@@ -95,6 +97,7 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
          */
         [self launchReward];
     }
+    
     return;
 }
 
@@ -173,6 +176,7 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
                                               otherButtonTitles:nil];
         [alert show];
     }
+    
     return;
 }
 
