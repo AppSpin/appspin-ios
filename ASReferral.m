@@ -15,6 +15,7 @@
 
 @property NSMutableData *responseData;
 @property NSString *campaignInfoLink;
+@property NSString *campaignID;
 
 @end
 
@@ -62,6 +63,18 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
                                             otherButtonTitles:@"Yes, please!", @"No, thanks", nil];
     [alert show];
     
+    if (_campaignID) {
+        NSString *trackOfferURLString = [NSString stringWithFormat:@"%@offer?campaign_id=%@&token=%@",
+                                  kAppSpinAPIEndpoint,
+                                  _campaignID,
+                                  kAppSpinDeveloperToken];
+        
+        UIImage *trackPixel = [UIImage imageWithData:
+                                [NSData dataWithContentsOfURL:
+                                [NSURL URLWithString: trackOfferURLString]]];
+        #pragma unused(trackPixel)
+    }
+    
     return;
 }
 
@@ -71,8 +84,8 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
          * Launch browser to display campaign details
          *
          * If you want to display the details natively, you make make
-         * a request for JSON data via the API's "info" endpoint
-         * TODO: link to API docs
+         * a request for JSON data via the API's "campaigns" endpoint
+         * http://docs.appsp.in/#!/campaign
          */
         
         NSURL *url = [NSURL URLWithString:_campaignInfoLink];
@@ -93,7 +106,7 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
         /*
          * If your app already has the user's contact info, you can generate affiliate
          * links on the fly via the API's "generate" endpoint
-         * TODO: link to API docs
+         * http://docs.appsp.in/#!/affiliate
          */
         [self launchReward];
     }
@@ -144,7 +157,9 @@ NSString *const kAppSpinDeveloperToken = YOUR_DEVELOPER_TOKEN;    // YOUR DEVELO
              * but we could write business logic to choose a specific campaign
              * TODO: provide example of server-side implementation of business logic
              */
-            NSString *infoLink = [[campaigns objectAtIndex:0] objectForKey:@"info_link"];
+            NSDictionary *campaignData = [campaigns objectAtIndex:0];
+            NSString *infoLink = [campaignData objectForKey:@"info_link"];
+            _campaignID = [campaignData objectForKey:@"id"];
             
             if (![infoLink hasPrefix:@"http"]) {
                 infoLink = [NSString stringWithFormat:@"http://%@", infoLink];
